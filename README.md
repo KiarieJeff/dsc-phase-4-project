@@ -85,9 +85,11 @@ for word in tweets_freqdist_top_10:
     print(f'{word[0]:<10} {normalized_frequency:^20.4}')
 
 ```
+| Word        | Normalized Frequency |
+| ----------- | -----------          |
+| sxsw        | 0.0858               |
+| mention     | 0.06442              |
+| link        | 0.03821              |
+| rt          | 0.02743              |
 
-Word       Normalized Frequency
-sxsw              0.0858       
-mention          0.06442       
-link             0.03821       
-rt               0.02743       
+     
