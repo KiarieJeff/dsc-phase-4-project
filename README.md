@@ -39,21 +39,13 @@ Natural Language Processing (NLP) relies on regression techniques, necessitating
 
 ## Text Analysis
 
-We can calculate word frequencies, and print the top 10 most frequent words along with their normalized frequencies
+Top 10 most frequent words along with their normalized frequencies
 
-```python
-tweets_freqdist_top_10 = tweets_freqdist.most_common(10)
-print(f'{"Word":<10} {"Normalized Frequency":<20}')
-for word in tweets_freqdist_top_10:
-    normalized_frequency = word[1] / total_word_count
-    print(f'{word[0]:<10} {normalized_frequency:^20.4}')
-```
-| Word        | Normalized Frequency |
-| ----------- | -----------          |
-| sxsw        | 0.0858               |
-| mention     | 0.06442              |
-| link        | 0.03821              |
-| rt          | 0.02743              |
+![alt text](output_img2.png "Evaluation")
+
+Top 10 bigram (two-word combinations) collocations in the tweets_raw_stopped text data.
+
+![alt text](output_img3.png "Evaluation2")
 
 ## Modeling & Evaluation
 
@@ -89,7 +81,7 @@ model_2.compile(optimizer="adam",loss='categorical_crossentropy',metrics=["accur
 ```
 ### Apple/Google Evaluation
 
-![alt text](output_img1.png "Evaluation")
+![alt text](output_img1.png "Evaluation3")
 
 ### Recommendations and Conclusion
 
