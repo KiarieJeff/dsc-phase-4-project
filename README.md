@@ -67,10 +67,8 @@ lr = Pipeline([('Logistic Regression', LogisticRegression())])
 models = [('Random Forest', rf),('Support Vector Machine', svc),('Logistic Regression', lr)]
 
 scores = [(name, cross_val_score(model,X_tf_idf_train_bi, y_train_bi, cv=2).mean()) for name, model, in models]
-scores 
-```
 
-```python
+(Output):
 [('Random Forest', 0.8626880440204012),
  ('Support Vector Machine', 0.8582943167130577),
  ('Logistic Regression', 0.8447452254919312)]
@@ -91,7 +89,7 @@ model_2.compile(optimizer="adam",loss='categorical_crossentropy',metrics=["accur
 ```
 ### Apple/Google Evaluation
 
-![alt text](output_img1.jpg "Evaluation")
+![alt text](output_img1.png "Evaluation")
 
 ### Recommendations and Conclusion
 
