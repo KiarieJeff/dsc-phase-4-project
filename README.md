@@ -16,46 +16,10 @@ Leveraging our neural network, we will carry out sentiment predictions for a doc
 
 The introduction of social media has completely changed how businesses interact with their consumers and the general public in today's connected society. While the digital age offers limitless possibilities for marketing and brand development, it also brings its own set of difficulties. One of these difficulties is the inability of enterprises to precisely gauge public opinion and feelings towards their goods or services.
 
-In the age of social media, organizations are acutely aware of the need to harness the wealth of sentiment and emotion data available on these platforms. However, they often struggle to do so effectively, given the unprecedented speed, diversity, and complexity of social media communication. The dynamic nature of the medium, the diverse and contextual language used, the rapid increase of emojis and visual content, the volume of noise, and ethical concerns all contribute to the challenge of gauging public sentiment and emotions. 
-
-To overcome these challenges, organizations must invest in advanced sentiment analysis tools and technologies, develop cultural and linguistic expertise, and strike a balance between data-driven insights and ethical considerations. By doing so, they can unlock the valuable insights hidden within the social media storm and use them to inform strategic decisions, enhance products and services, and build stronger connections with their audience in this rapidly evolving digital landscape.
-
 ## Data understanding
 
 **Dataset Overview:**
 This dataset comprises 8,721 entries organized into three distinct columns: tweet_text, emotion_in_tweet_is_directed_at, and is_there_an_emotion_directed_at_a_brand_or_product. Each entry in the dataset represents a tweet along with associated metadata regarding the product or brand it's directed at and the emotional sentiment conveyed within the tweet.
-
-**Column Descriptions:**
-
-`tweet_text:`
-
-The tweet_text column contains the textual content of individual tweets. These tweets are typically concise, informal expressions shared by users on a social media platform, such as Twitter. Each tweet serves as a snapshot of a user's thoughts, opinions, or experiences related to a particular product or brand.
-The textual data within this column can vary in length, language, and complexity. It may include hashtags, mentions of other users, URLs, and a wide range of linguistic elements.
-Analysis of the tweet text can provide valuable insights into the sentiments, opinions, or feedback expressed by users regarding the product or brand.
-
-`emotion_in_tweet_is_directed_at:`
-
-The emotion_in_tweet_is_directed_at column provides information about the specific product or brand mentioned or targeted by each tweet. This column serves as a categorical label indicating the entity towards which the emotion or sentiment expressed in the tweet is directed.
-Entries in this column may include the names or identifiers of various products or brands, allowing for the categorization of tweets based on the entity they reference.
-Understanding which products or brands are most frequently mentioned in tweets can help identify consumer preferences and the areas where sentiment analysis may be most relevant.
-
-`is_there_an_emotion_directed_at_a_brand_or_product:`
-
-The is_there_an_emotion_directed_at_a_brand_or_product column characterizes the emotional sentiment or tone conveyed within each tweet directed at a product or brand.
-This column serves as a crucial indicator of the emotional context of the tweets and can be categorized into several classes, including:
-
-* Positive: Tweets expressing favorable sentiments, such as satisfaction, excitement, or endorsement, towards the product or brand.
-
-* Negative: Tweets containing unfavorable sentiments, such as criticism, frustration, or dissatisfaction, directed at the product or brand.
-
-* No Emotion: Tweets that do not convey any discernible emotional sentiment. These tweets may provide neutral or factual information.
-
-* Not Clear: Tweets where the emotional tone is ambiguous or unclear, making it challenging to determine the sentiment.
-
-Analyzing this column allows for sentiment classification and provides valuable insights into how consumers perceive and react to products or brands in the context of social media.
-Dataset Size:
-
-The dataset contains a total of 8,721 entries, each representing a unique tweet. This dataset size is substantial and provides a rich source of data for sentiment analysis and brand/product perception studies.
 
 **Data Exploration and Analysis:**
 
@@ -75,7 +39,7 @@ Natural Language Processing (NLP) relies on regression techniques, necessitating
 
 ## Text Analysis
 
-First we can calculate word frequencies, and print the top 10 most frequent words along with their normalized frequencies
+We can calculate word frequencies, and print the top 10 most frequent words along with their normalized frequencies
 
 ```python
 tweets_freqdist_top_10 = tweets_freqdist.most_common(10)
@@ -83,7 +47,6 @@ print(f'{"Word":<10} {"Normalized Frequency":<20}')
 for word in tweets_freqdist_top_10:
     normalized_frequency = word[1] / total_word_count
     print(f'{word[0]:<10} {normalized_frequency:^20.4}')
-
 ```
 | Word        | Normalized Frequency |
 | ----------- | -----------          |
@@ -92,4 +55,55 @@ for word in tweets_freqdist_top_10:
 | link        | 0.03821              |
 | rt          | 0.02743              |
 
-     
+## Modeling & Evaluation
+
+Baseline Model:
+
+```python
+rf =  Pipeline([('Random Forest', RandomForestClassifier(n_estimators=100, verbose=True))])
+svc = Pipeline([('Support Vector Machine', SVC())])
+lr = Pipeline([('Logistic Regression', LogisticRegression())])
+
+models = [('Random Forest', rf),('Support Vector Machine', svc),('Logistic Regression', lr)]
+
+scores = [(name, cross_val_score(model,X_tf_idf_train_bi, y_train_bi, cv=2).mean()) for name, model, in models]
+scores 
+```
+
+```python
+[('Random Forest', 0.8626880440204012),
+ ('Support Vector Machine', 0.8582943167130577),
+ ('Logistic Regression', 0.8447452254919312)]
+```
+Based on these scores, the Random Forest model achieved the highest mean accuracy, followed by the Support Vector Machine and Logistic Regression models. We can use the Random Forest model as our final baseline model.
+
+Iterated Model:
+
+```python
+model_2 = Sequential()
+
+model_2.add(Dense(64, activation='relu', input_shape=(6486,)))
+model_2.add(Dropout(0.5))
+
+model_2.add(Dense(3, activation='softmax'))
+
+model_2.compile(optimizer="adam",loss='categorical_crossentropy',metrics=["accuracy"]) 
+```
+### Apple/Google Evaluation
+
+![alt text](output_img1.jpg "Evaluation")
+
+### Recommendations and Conclusion
+
+As evident from the preceding visualizations, iPhones play a significant role in generating a substantial number of negative reviews concerning Apple. Conversely, iPads tend to contribute significantly to the positive feedback received by Apple. Meanwhile, Google receives a higher proportion of positive remarks compared to Android. However, it's worth noting that Apple still outperforms Google in terms of positive reviews. Based on these observations, we can formulate the following recommendations:
+
+* Investigate the common issues or concerns raised by users of iPhones in negative reviews and take proactive steps to address them.
+
+* Consider expanding the iPad product line or introducing new versions to maintain positive customer sentiment.
+
+* Leverage the favorable feedback received by Google products and services to bolster brand reputation and customer loyalty.
+
+* Understand the factors contributing to Apple's overall higher positive reviews compared to Google and utilize these insights to maintain a positive image.
+
+In conclusion,the recommendations emphasize the importance of a customer-centric approach. Addressing customer concerns, improving product quality, and engaging with customers effectively are vital for maintaining a positive brand image.
+
